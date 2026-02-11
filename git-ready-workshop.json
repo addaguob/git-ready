@@ -1,0 +1,95 @@
+{
+  "title": "Let’s Git Ready: An Introduction to Git & GitHub",
+  "topic": {
+    "1. Introduction to Version Control": {
+      "What is Version Control and Why It Matters": "Version control is a system that records changes to a file or set of files over time so that you can recall specific versions later. It allows developers to keep track of every modification made to the code, saving snapshots at different points in time. This matters because it enables you to revert back to earlier versions if a mistake is made, effectively preventing the loss of work or the overwriting of important code.",
+      "Git vs GitHub": "Git and GitHub are connected but distinct tools; Git is the version control software itself, while GitHub is a hosting service for Git repositories. Git runs locally on your computer to track changes and manage version history. In contrast, GitHub acts as a remote server in the cloud where you can upload your Git repositories to share them with others, facilitate collaboration, and maintain backups.",
+      "Importance of Git in Software Development and Team Projects": "In software development, Git is crucial because it allows multiple developers to work on the same project simultaneously without interfering with each other's work. It synchronizes code between different people, ensuring everyone has access to the latest changes and can merge their contributions effectively. Furthermore, Git facilitates the testing of new features on separate branches without breaking the main codebase, which is essential for stable team workflows."
+    },
+    "2. Setting Up Git and GitHub": {
+      "Installing Git": "To start using Git, you must first install it on your computer by downloading the appropriate version for your operating system (Windows, Mac OS, or Linux) from the official website. Once installed, you can verify the installation by running the command `git --version` in your terminal or command prompt.",
+      "Creating a GitHub Account": "You can create a GitHub account by navigating to GitHub.com and signing up for free. This account allows you to host your remote repositories, enabling you to back up your local work and collaborate with other developers.",
+      "Configuring Git (username and email)": "After installing Git, it is necessary to configure your identity so that your commits are correctly attributed to you. You can set your global username and email address by running the commands `git config --global user.email 'your@email.com'` and `git config --global user.name 'Your Name'`.",
+      "Basic Git Terminologies (repository, commit, branch)": "A **repository** (or repo) is a folder that contains all your project files and the revision history stored in a hidden `.git` directory. A **commit** is a saved snapshot of your repository at a specific point in time, acting like a save point in a game. A **branch** is a separate line of development that allows you to work on features or fixes in isolation from the main codebase."
+    },
+    "3. Basics of Git (Local Version Control)": {
+      "Initializing a Repository (git init)": "To start tracking a project with Git, you navigate to your project folder in the terminal and run `git init`. This command initializes a new, empty Git repository by creating a hidden `.git` directory, which houses all the internal tracking data for version control.",
+      "Checking File Status (git status)": "The `git status` command is used to inspect the current state of your working directory and staging area. It informs you which files have been modified, which are staged for commit, and which files remain untracked by Git.",
+      "Staging Files (git add)": "Staging is an intermediate step where you prepare specific files to be included in the next commit. You use the `git add` command, such as `git add filename` or `git add .` to stage all changes, moving them from the working directory to the staging area.",
+      "Creating Commits (git commit)": "Once files are staged, you save a snapshot of the changes to the repository history using the `git commit` command. It is standard practice to include a descriptive message with the `-m` flag, like `git commit -m 'message'`, to explain what changes were made in that snapshot.",
+      "Understanding the Git Workflow": "The core Git workflow consists of three main stages: the working directory, where you modify files; the staging area (index), where you prepare changes; and the local repository, where commits are permanently recorded. Developers typically cycle through modifying files, adding them to the stage, and committing them to the repository."
+    },
+    "4. Introduction to GitHub (Remote Version Control)": {
+      "Creating a Repository on GitHub": "To create a remote repository, you log into GitHub, click the 'New repository' button, and provide a name and optional description. You can choose to make the repository public or private before finalizing its creation.",
+      "Connecting Local Repositories to GitHub": "To link a local repository to a remote GitHub repository, you use the command `git remote add origin <URL>`, where the URL is provided by GitHub. This establishes a connection that allows you to push local commits to the server and pull remote changes down to your machine.",
+      "Pushing and Pulling Changes (git push, git pull)": "The `git push` command uploads your local commits to the remote repository on GitHub, updating the online version with your work. Conversely, `git pull` fetches the latest changes from the remote repository and merges them into your local branch, ensuring your code is up to date with your team's work.",
+      "Understanding .gitignore": "The `.gitignore` file specifies which files and directories Git should intentionally ignore and not track, such as build artifacts, temporary files, or sensitive information. This prevents clutter in the repository and ensures that only relevant source code is versioned."
+    },
+    "5. Branching and Collaboration Concepts": {
+      "What are Branches and Why They’re Used": "Branches are parallel versions of the repository that diverge from the main line of development, allowing you to work on new features or bug fixes safely. They are used to isolate changes so that unfinished or experimental code does not affect the stable, main version of the project.",
+      "Creating and Switching Branches": "You can create a new branch using `git branch <name>` or create and switch to it simultaneously with `git checkout -b <name>`. Switching between branches is done using `git checkout <name>` or the newer `git switch <name>`, which updates the files in your working directory to match the selected branch.",
+      "Merging Branches": "Merging is the process of integrating changes from one branch into another, typically bringing feature work back into the main branch. This is done using the `git merge <branch-name>` command, which combines the history and file changes of the specified branch into the current active branch.",
+      "Basic Overview of Merge Conflicts": "A merge conflict occurs when Git cannot automatically resolve differences between two branches, usually because the same line of a file was modified in both. When this happens, Git pauses the merge and asks the user to manually edit the files to choose which changes to keep before finalizing the commit."
+    },
+    "6. Overview of GitHub Features": {
+      "README Files and Markdown Basics": "A README file serves as the homepage for your repository, explaining what the project is and how to use it. It is typically written in Markdown, a lightweight syntax that allows you to format text with headers, lists, links, and code blocks to create readable documentation.",
+      "Issues and Pull Requests": "Issues are used to track bugs, enhancements, or tasks within a GitHub project. Pull Requests (PRs) allow developers to propose changes to a repository, initiating a review process where team members can discuss and approve the code before it is merged into the main branch.",
+      "GitHub for Collaboration and Version Management": "GitHub enhances collaboration by acting as a central hub where teams can sync their work, review code, and manage project history. It offers features like forking, which allows users to copy and modify repositories freely, and pull requests to contribute those changes back to the original project.",
+      "GitHub as a Portfolio Tool": "GitHub can serve as a professional portfolio by showcasing your repositories, code quality, and contributions to open source projects. You can customize your profile with a special README repository to display your bio, skills, and pinned projects, giving recruiters a clear view of your technical abilities."
+    },
+    "7. Best Practices and Common Mistakes": {
+      "Writing Clear and Meaningful Commit Messages": "Commit messages should be self-explanatory and describe the 'why' and 'what' of a change rather than just 'fixed' or 'edited'. Good commit messages create a readable history that helps team members (and your future self) understand the project's evolution.",
+      "Repository Organization": "Effective repository organization involves keeping a clean structure, using a `.gitignore` to exclude unnecessary files like `node_modules` or credentials, and maintaining a helpful README. It also includes using branches effectively to keep new features separate from the stable codebase.",
+      "Common Beginner Errors and How to Avoid Them": "Beginners often make mistakes like committing to the wrong branch, pushing unfinished code, or forgetting to add new files to the staging area. These can be avoided by frequently checking `git status`, using branches for all new work, and verifying changes before committing."
+    },
+    "8. Git & GitHub Hands-On Workshop": {
+      "Creating a Local Repository": "Participants will practice creating a directory and running `git init` to turn it into a Git repository. This step establishes the foundation for tracking files locally on their machine.",
+      "Making Commits and Tracking Changes": "The workshop will cover the cycle of creating files, using `git add` to stage them, and `git commit` to save the history. This reinforces the concept of snapshots and the importance of commit messages.",
+      "Pushing a Project to GitHub": "Learners will create a remote repository on GitHub and use `git push` to upload their local commits. This demonstrates how to back up code and make it accessible for collaboration.",
+      "Branching and Merging Practice": "Users will create a new branch to make a change, switch back to the main branch, and then merge the new feature. This exercise illustrates safe development workflows and how Git handles parallel history.",
+      "Submitting a Simple Pull Request": "The session concludes with forking a repository or pushing a branch and opening a Pull Request on GitHub. This simulates a real-world team contribution workflow where code is reviewed before integration."
+    },
+    "References": {
+      "Let’s Git Ready Event Outline": {
+        "description": "The official schedule and topic outline for the \"Let’s Git Ready\" workshop, detailing the sessions from introduction to hands-on activities.",
+        "url": "https://lscs.info/PreRegLetsGitReady"
+      },
+      "Git - Reference Manual": {
+        "description": "The official documentation for Git, providing comprehensive details on commands (porcelain and plumbing), configuration, and setup.",
+        "url": "https://git-scm.com/docs"
+      },
+      "CS50W - Lecture 1 - Git (CS50)": {
+        "description": "A lecture transcript and notes from Harvard's CS50 course explaining the theory of version control, branching, merging, and GitHub features.",
+        "url": "https://cs50.harvard.edu/web/"
+      },
+      "Git & GitHub Crash Course for Beginners (freeCodeCamp.org)": {
+        "description": "A video transcript covering the practical application of Git, including git init, staging, committing, and connecting to remote repositories.",
+        "source": "YouTube Transcript",
+        "url": "https://youtu.be/mAFoROnOfHs?list=TLGGAuSebiVu5bwxMTAyMjAyNg"
+      },
+      "Git and GitHub - Full Course (Boot.dev)": {
+        "description": "An in-depth course transcript covering Git internals (objects, trees, blobs), advanced configuration, rebasing strategies, and stashing.",
+        "source": "YouTube Transcript",
+        "url": "https://youtu.be/rH3zE7VlIMs?list=TLGGBsXetbpozhwxMTAyMjAyNg"
+      },
+      "7 (Deadly) Common Git Mistakes and How to Fix Them (GitKraken)": {
+        "description": "A blog post outlining common errors developers make, such as accidentally deleting files or pushing unfinished code, and how to resolve them.",
+        "source": "GitKraken Blog",
+        "url": "https://www.gitkraken.com/blog/git-common-mistakes"
+      },
+      "Tips to use GitHub as your Portfolio (DEV Community)": {
+        "description": "An article providing strategies for using GitHub profiles as professional portfolios, including pinning projects and customizing the README.",
+        "source": "DEV Community",
+        "url": "https://dev.to/pachicodes/tips-to-use-github-as-your-portfolio-4kb2"
+      },
+      "Markdown Guide (Basic & Extended Syntax)": {
+        "description": "A guide to Markdown syntax, essential for creating README.md files and documentation on GitHub.",
+        "url": "https://www.markdownguide.org"
+      },
+      "GitHub Topics: Portfolio": {
+        "description": "A GitHub discovery page listing repositories and templates related to building personal portfolios.",
+        "url": "https://github.com/topics/portfolio"
+      }
+    }
+  }
+}
