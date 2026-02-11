@@ -1,31 +1,567 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Hello World</title>
-		<style>
-			:root {
-				color-scheme: light;
-			}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let’s Git Ready: An Introduction to Git & GitHub</title>
+    <style>
+        :root {
+            /* Daguob Studio / Academic Aesthetic */
+            --bg-color: #f7f2e9;
+            --text-color: #2f2a22;
+            --accent-color: #a84e32; /* A subtle rust/brick color for highlights */
+            --dim-text: #6b665f;
+            --font-main: "Georgia", "Times New Roman", serif;
+            --font-mono: "Courier New", Courier, monospace;
+        }
 
-			body {
-				margin: 0;
-				min-height: 100vh;
-				display: grid;
-				place-items: center;
-				font-family: "Georgia", "Times New Roman", serif;
-				background: #f7f2e9;
-				color: #2f2a22;
-			}
+        body {
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden; /* Prevent scrolling */
+        }
 
-			h1 {
-				font-size: clamp(2rem, 6vw, 4rem);
-				letter-spacing: 0.02em;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Hello, world</h1>
-	</body>
+        /* ROW 1: Main Title */
+        header {
+            flex: 0 0 auto;
+            padding: 1rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ROW 2: Section Topic */
+        #topic-bar {
+            flex: 0 0 auto;
+            background-color: rgba(0,0,0,0.03);
+            padding: 0.5rem 2rem;
+            text-align: center;
+            font-weight: bold;
+            font-style: italic;
+            color: var(--dim-text);
+            font-size: 2.0rem;
+        }
+
+        /* ROW 3: Slide Proper (The Split View) */
+        #slide-container {
+            flex: 1; /* Takes up remaining space */
+            display: flex;
+            overflow: hidden;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .column {
+            flex: 0 1 42%;
+            max-width: 560px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            transition: background 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Left Column (Visuals & Nav Prev) */
+        #col-left {
+            flex: 0 0 auto;
+            width: auto;
+            max-width: none;
+            align-items: center;
+            background: #e8e4db; /* Slightly darker to distinguish visual area */
+        }
+        #col-left:hover { background: rgba(0,0,0,0.02); }
+        #col-left::after {
+            content: "← PREV";
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #col-left:hover::after { opacity: 0.5; }
+
+        /* Right Column (Content & Nav Next) */
+        #col-right {
+            flex: 1 1 0%;
+            max-width: none;
+            border-left: 1px solid rgba(0,0,0,0.05);
+            align-items: flex-start;
+            overflow-y: auto;
+            scrollbar-gutter: stable;
+        }
+        #col-right:hover { background: rgba(0,0,0,0.02); }
+        #col-right::after {
+            content: "NEXT →";
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #col-right:hover::after { opacity: 0.5; }
+
+        /* Typography inside Slide */
+        #slide-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        #slide-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            max-width: 100%;
+        }
+
+        /* Image Styling */
+        #slide-image {
+            width: 600px;
+            height: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #fff;
+            display: none; /* Hidden by default if no src */
+        }
+        .image-placeholder {
+            border: 2px dashed var(--dim-text);
+            width: 250px;
+            height: 250px;
+            padding: 1rem;
+            color: var(--dim-text);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 960px) {
+            #slide-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1.5rem 1rem;
+                overflow-y: auto;
+            }
+
+            .column {
+                flex: auto 0 auto;
+                max-width: none;
+                width: 100%;
+            }
+
+            #col-right {
+                border-left: none;
+                border-top: 1px solid rgba(0,0,0,0.05);
+                overflow-y: visible;
+            }
+        }
+
+        /* ROW 4: Speaker Notes (Teleprompter) */
+        #speaker-notes {
+            flex: 0 0 100px; /* Fixed height for notes */
+            background: #222;
+            color: #eee;
+            padding: 1rem 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            overflow-y: auto;
+            border-top: 2px solid #a84e32;
+        }
+        #speaker-notes small {
+            display: block;
+            color: #aaa;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        /* ROW 5: Progress Bar */
+        #progress-container {
+            flex: 0 0 8px;
+            background: #ccc;
+            width: 100%;
+        }
+        #progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Let’s Git Ready: An Introduction to Git & GitHub</h1>
+    </header>
+
+    <div id="topic-bar">Topic Loading...</div>
+
+    <div id="slide-container">
+        <div id="col-left" onclick="prevSlide()">
+            <img id="slide-image" src="" alt="Slide Visual">
+            <div id="img-placeholder" class="image-placeholder">
+                [Visual Placeholder]<br>
+                <span id="img-name">image.png</span>
+            </div>
+        </div>
+
+        <div id="col-right" onclick="nextSlide()">
+            <h2 id="slide-title">Title</h2>
+            <p id="slide-text">Content goes here...</p>
+        </div>
+    </div>
+
+    <div id="speaker-notes">
+        <small>SPEAKER NOTES</small>
+        <span id="note-text">Notes loading...</span>
+    </div>
+
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <script>
+        // --- DATA PREPARATION ---
+        // Full workshop content loaded from git-ready-workshop.json (inlined here).
+        const workshopData = {
+            "title": "Let’s Git Ready: An Introduction to Git & GitHub",
+            "topic": {
+                "1. Introduction to Version Control": {
+                    "What is Version Control and Why It Matters": [
+                        "Version control is a system that records changes to a file or set of files over time so that you can recall specific versions later. It allows developers to keep track of every modification made to the code, saving snapshots at different points in time. This matters because it enables you to revert back to earlier versions if a mistake is made, effectively preventing the loss of work or the overwriting of important code.",
+                        "Quick show of hands: who has named files like project.cpp, project-final.cpp, project-final2.cpp? Version control saves us from that little comedy."
+                    ],
+                    "Git vs GitHub": [
+                        "Git and GitHub are connected but distinct tools; Git is the version control software itself, while GitHub is a hosting service for Git repositories. Git runs locally on your computer to track changes and manage version history. In contrast, GitHub acts as a remote server in the cloud where you can upload your Git repositories to share them with others, facilitate collaboration, and maintain backups.",
+                        "If Git is the camera on your phone, GitHub is the shared photo album in the cloud."
+                    ],
+                    "Importance of Git in Software Development and Team Projects": [
+                        "In software development, Git is crucial because it allows multiple developers to work on the same project simultaneously without interfering with each other's work. It synchronizes code between different people, ensuring everyone has access to the latest changes and can merge their contributions effectively. Furthermore, Git facilitates the testing of new features on separate branches without breaking the main codebase, which is essential for stable team workflows.",
+                        "Remember group projects where someone overwrote your work? Git is the referee that keeps the peace."
+                    ]
+                },
+                "2. Setting Up Git and GitHub": {
+                    "Installing Git": [
+                        "To start using Git, you must first install it on your computer by downloading the appropriate version for your operating system (Windows, Mac OS, or Linux) from the official website. Once installed, you can verify the installation by running the command `git --version` in your terminal or command prompt.",
+                        "Before you cook, you install the stove. This is that step."
+                    ],
+                    "Creating a GitHub Account": [
+                        "You can create a GitHub account by navigating to GitHub.com and signing up for free. This account allows you to host your remote repositories, enabling you to back up your local work and collaborate with other developers.",
+                        "If you can make a social profile, you can make this one. It is your code profile."
+                    ],
+                    "Configuring Git (username and email)": [
+                        "After installing Git, it is necessary to configure your identity so that your commits are correctly attributed to you. You can set your global username and email address by running the commands `git config --global user.email 'your@email.com'` and `git config --global user.name 'Your Name'`.",
+                        "Git signs every snapshot; this is your signature so future you knows who did it."
+                    ],
+                    "Basic Git Terminologies (repository, commit, branch)": [
+                        "A **repository** (or repo) is a folder that contains all your project files and the revision history stored in a hidden `.git` directory. A **commit** is a saved snapshot of your repository at a specific point in time, acting like a save point in a game. A **branch** is a separate line of development that allows you to work on features or fixes in isolation from the main codebase.",
+                        "Repo = folder, commit = save point, branch = alternate timeline."
+                    ]
+                },
+                "3. Basics of Git (Local Version Control)": {
+                    "Initializing a Repository (git init)": [
+                        "To start tracking a project with Git, you navigate to your project folder in the terminal and run `git init`. This command initializes a new, empty Git repository by creating a hidden `.git` directory, which houses all the internal tracking data for version control.",
+                        "git init is the moment your folder becomes a time machine."
+                    ],
+                    "Checking File Status (git status)": [
+                        "The `git status` command is used to inspect the current state of your working directory and staging area. It informs you which files have been modified, which are staged for commit, and which files remain untracked by Git.",
+                        "git status is your dashboard; check it often."
+                    ],
+                    "Staging Files (git add)": [
+                        "Staging is an intermediate step where you prepare specific files to be included in the next commit. You use the `git add` command, such as `git add filename` or `git add .` to stage all changes, moving them from the working directory to the staging area.",
+                        "Staging is putting items in the cart before checkout."
+                    ],
+                    "Creating Commits (git commit)": [
+                        "Once files are staged, you save a snapshot of the changes to the repository history using the `git commit` command. It is standard practice to include a descriptive message with the `-m` flag, like `git commit -m 'message'`, to explain what changes were made in that snapshot.",
+                        "A commit is a snapshot with a label. Keep it short and clear."
+                    ],
+                    "Understanding the Git Workflow": [
+                        "The core Git workflow consists of three main stages: the working directory, where you modify files; the staging area (index), where you prepare changes; and the local repository, where commits are permanently recorded. Developers typically cycle through modifying files, adding them to the stage, and committing them to the repository.",
+                        "Draft, stage, save to history. That is the rhythm."
+                    ]
+                },
+                "4. Introduction to GitHub (Remote Version Control)": {
+                    "Creating a Repository on GitHub": [
+                        "To create a remote repository, you log into GitHub, click the 'New repository' button, and provide a name and optional description. You can choose to make the repository public or private before finalizing its creation.",
+                        "Think of this as creating a new folder in the cloud."
+                    ],
+                    "Connecting Local Repositories to GitHub": [
+                        "To link a local repository to a remote GitHub repository, you use the command `git remote add origin <URL>`, where the URL is provided by GitHub. This establishes a connection that allows you to push local commits to the server and pull remote changes down to your machine.",
+                        "We are pairing your local folder with its cloud home."
+                    ],
+                    "Pushing and Pulling Changes (git push, git pull)": [
+                        "The `git push` command uploads your local commits to the remote repository on GitHub, updating the online version with your work. Conversely, `git pull` fetches the latest changes from the remote repository and merges them into your local branch, ensuring your code is up to date with your team's work.",
+                        "Push = upload, pull = download. Like syncing photos."
+                    ],
+                    "Understanding .gitignore": [
+                        "The `.gitignore` file specifies which files and directories Git should intentionally ignore and not track, such as build artifacts, temporary files, or sensitive information. This prevents clutter in the repository and ensures that only relevant source code is versioned.",
+                        "It is the do-not-pack list for your suitcase."
+                    ]
+                },
+                "5. Branching and Collaboration Concepts": {
+                    "What are Branches and Why They’re Used": [
+                        "Branches are parallel versions of the repository that diverge from the main line of development, allowing you to work on new features or bug fixes safely. They are used to isolate changes so that unfinished or experimental code does not affect the stable, main version of the project.",
+                        "Branches are parallel lanes so you can experiment without crashing main."
+                    ],
+                    "Creating and Switching Branches": [
+                        "You can create a new branch using `git branch <name>` or create and switch to it simultaneously with `git checkout -b <name>`. Switching between branches is done using `git checkout <name>` or the newer `git switch <name>`, which updates the files in your working directory to match the selected branch.",
+                        "Switch branches like changing tabs; you keep your place."
+                    ],
+                    "Merging Branches": [
+                        "Merging is the process of integrating changes from one branch into another, typically bringing feature work back into the main branch. This is done using the `git merge <branch-name>` command, which combines the history and file changes of the specified branch into the current active branch.",
+                        "Merging is bringing the feature lane back into the main highway."
+                    ],
+                    "Basic Overview of Merge Conflicts": [
+                        "A merge conflict occurs when Git cannot automatically resolve differences between two branches, usually because the same line of a file was modified in both. When this happens, Git pauses the merge and asks the user to manually edit the files to choose which changes to keep before finalizing the commit.",
+                        "Two people edited the same line, and Git asks you to choose."
+                    ]
+                },
+                "6. Overview of GitHub Features": {
+                    "README Files and Markdown Basics": [
+                        "A README file serves as the homepage for your repository, explaining what the project is and how to use it. It is typically written in Markdown, a lightweight syntax that allows you to format text with headers, lists, links, and code blocks to create readable documentation.",
+                        "README is the front door sign; Markdown is the simple paint. Let's go for a brief overview at https://www.markdownguide.org/basic-syntax/"
+                    ],
+                    "Issues and Pull Requests": [
+                        "Issues are used to track bugs, enhancements, or tasks within a GitHub project. Pull Requests (PRs) allow developers to propose changes to a repository, initiating a review process where team members can discuss and approve the code before it is merged into the main branch.",
+                        "Issues are to-do tickets; PRs are please review my work."
+                    ],
+                    "GitHub for Collaboration and Version Management": [
+                        "GitHub enhances collaboration by acting as a central hub where teams can sync their work, review code, and manage project history. It offers features like forking, which allows users to copy and modify repositories freely, and pull requests to contribute those changes back to the original project.",
+                        "Think shared workspace plus review table."
+                    ],
+                    "GitHub as a Portfolio Tool": [
+                        "GitHub can serve as a professional portfolio by showcasing your repositories, code quality, and contributions to open source projects. You can customize your profile with a special README repository to display your bio, skills, and pinned projects, giving recruiters a clear view of your technical abilities.",
+                        "Your profile is your storefront; pin your best work. Let's check github.com/topics/portfolio"
+                    ]
+                },
+                "7. Best Practices and Common Mistakes": {
+                    "Writing Clear and Meaningful Commit Messages": [
+                        "Commit messages should be self-explanatory and describe the 'why' and 'what' of a change rather than just 'fixed' or 'edited'. Good commit messages create a readable history that helps team members (and your future self) understand the project's evolution. Examples include<br>`\"Add user authentication flow\"`<br> `\"Refactor database connection logic for better performance\"`.",
+                        "Write for future you on a tired day."
+                    ],
+                    "Repository Organization": [
+                        "Effective repository organization involves keeping a clean structure, using a `.gitignore` to exclude unnecessary files like `node_modules` or credentials, and maintaining a helpful README. It also includes using branches effectively to keep new features separate from the stable codebase.",
+                        "A clean repo is a clean room; easier to invite friends."
+                    ],
+                    "Common Beginner Errors and How to Avoid Them": [
+                        "Beginners often make mistakes like committing to the wrong branch, pushing unfinished code, or forgetting to add new files to the staging area. These can be avoided by frequently checking `git status`, using branches for all new work, and verifying changes before committing.",
+                        "The three classics: wrong branch, forgot add, pushed too soon. My personal mistake in contributing to open source: https://github.com/buildermethods/agent-os/pull/68"
+                    ]
+                },
+                "8. Git & GitHub Hands-On Workshop": {
+                    "Creating a Local Repository": [
+                        "Participants will practice creating a directory and running `git init` to turn it into a Git repository. This step establishes the foundation for tracking files locally on their machine.",
+                        "We take a normal folder and turn it into a time machine."
+                    ],
+                    "Making Commits and Tracking Changes": [
+                        "The workshop will cover the cycle of creating files, using `git add` to stage them, and `git commit` to save the history. This reinforces the concept of snapshots and the importance of commit messages.",
+                        "Small commits are checkpoints you can jump back to."
+                    ],
+                    "Pushing a Project to GitHub": [
+                        "Learners will create a remote repository on GitHub and use `git push` to upload their local commits. This demonstrates how to back up code and make it accessible for collaboration.",
+                        "First push feels scary; it is really just backup."
+                    ],
+                    "Branching and Merging Practice": [
+                        "Users will create a new branch to make a change, switch back to the main branch, and then merge the new feature. This exercise illustrates safe development workflows and how Git handles parallel history.",
+                        "Your sandbox branch is where experiments live."
+                    ],
+                    "Submitting a Simple Pull Request": [
+                        "The session concludes with forking a repository or pushing a branch and opening a Pull Request on GitHub. This simulates a real-world team contribution workflow where code is reviewed before integration.",
+                        "A PR is asking for feedback before you merge."
+                    ]
+                },
+                "References": {
+                    "Let’s Git Ready Event Outline": {
+                        "description": "The official schedule and topic outline for the \"Let’s Git Ready\" workshop, detailing the sessions from introduction to hands-on activities.",
+                        "url": "https://lscs.info/PreRegLetsGitReady"
+                    },
+                    "Git - Reference Manual": {
+                        "description": "The official documentation for Git, providing comprehensive details on commands (porcelain and plumbing), configuration, and setup.",
+                        "url": "https://git-scm.com/docs"
+                    },
+                    "CS50W - Lecture 1 - Git (CS50)": {
+                        "description": "A lecture transcript and notes from Harvard's CS50 course explaining the theory of version control, branching, merging, and GitHub features.",
+                        "url": "https://cs50.harvard.edu/web/"
+                    },
+                    "Git & GitHub Crash Course for Beginners (freeCodeCamp.org)": {
+                        "description": "A video transcript covering the practical application of Git, including git init, staging, committing, and connecting to remote repositories.",
+                        "source": "YouTube Transcript",
+                        "url": "https://youtu.be/mAFoROnOfHs?list=TLGGAuSebiVu5bwxMTAyMjAyNg"
+                    },
+                    "Git and GitHub - Full Course (Boot.dev)": {
+                        "description": "An in-depth course transcript covering Git internals (objects, trees, blobs), advanced configuration, rebasing strategies, and stashing.",
+                        "source": "YouTube Transcript",
+                        "url": "https://youtu.be/rH3zE7VlIMs?list=TLGGBsXetbpozhwxMTAyMjAyNg"
+                    },
+                    "7 (Deadly) Common Git Mistakes and How to Fix Them (GitKraken)": {
+                        "description": "A blog post outlining common errors developers make, such as accidentally deleting files or pushing unfinished code, and how to resolve them.",
+                        "source": "GitKraken Blog",
+                        "url": "https://www.gitkraken.com/blog/git-common-mistakes"
+                    },
+                    "Tips to use GitHub as your Portfolio (DEV Community)": {
+                        "description": "An article providing strategies for using GitHub profiles as professional portfolios, including pinning projects and customizing the README.",
+                        "source": "DEV Community",
+                        "url": "https://dev.to/pachicodes/tips-to-use-github-as-your-portfolio-4kb2"
+                    },
+                    "Markdown Guide (Basic & Extended Syntax)": {
+                        "description": "A guide to Markdown syntax, essential for creating README.md files and documentation on GitHub.",
+                        "url": "https://www.markdownguide.org"
+                    },
+                    "GitHub Topics: Portfolio": {
+                        "description": "A GitHub discovery page listing repositories and templates related to building personal portfolios.",
+                        "url": "https://github.com/topics/portfolio"
+                    }
+                }
+            }
+        };
+
+        function formatContent(text) {
+            return text
+                .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+                .replace(/`([^`]+)`/g, "<code>$1</code>");
+        }
+
+        function buildReferencesHtml(entries) {
+            const items = Object.entries(entries).map(([title, meta]) => {
+                const source = meta.source ? ` <em>(${meta.source})</em>` : "";
+                const link = meta.url ? ` <a href="${meta.url}" target="_blank" rel="noreferrer">${meta.url}</a>` : "";
+                return `<li><strong>${title}</strong>${source}<br>${meta.description}${link}</li>`;
+            });
+
+            return `<ul>${items.join("")}</ul>`;
+        }
+
+        function buildReferencesText(entries) {
+            return Object.entries(entries)
+                .map(([title, meta]) => {
+                    const source = meta.source ? ` (${meta.source})` : "";
+                    const link = meta.url ? ` ${meta.url}` : "";
+                    return `${title}${source}: ${meta.description}${link}`;
+                })
+                .join("\n");
+        }
+
+        const slides = [];
+        const sections = Object.entries(workshopData.topic);
+        sections.forEach(([sectionTitle, sectionSlides], sectionIndex) => {
+            if (sectionTitle === "References") {
+                return;
+            }
+
+            const entries = Object.entries(sectionSlides);
+            entries.forEach(([title, content], entryIndex) => {
+                const contentText = Array.isArray(content) ? content[0] : content;
+                const noteText = Array.isArray(content) ? (content[1] || content[0]) : content;
+                slides.push({
+                    section: sectionTitle,
+                    title,
+                    content: formatContent(contentText),
+                    rawContent: noteText,
+                    image: `assets/images/${sectionIndex + 1}-${entryIndex + 1}.png`
+                });
+            });
+        });
+
+        const references = workshopData.topic.References;
+        if (references && Object.keys(references).length > 0) {
+            slides.push({
+                section: "References",
+                title: "References",
+                content: buildReferencesHtml(references),
+                // rawContent: buildReferencesText(references),
+                rawContent: "For more questions or if you want to try a Git quiz, try my flash card in my NotebookLM at https://notebooklm.google.com/notebook/48aaeaf1-d5e6-40d0-87f6-8542f0b59aad",
+                image: "assets/images/references.png"
+            });
+        }
+
+        // --- STATE MANAGEMENT ---
+        let currentIndex = 0;
+
+        // --- DOM ELEMENTS ---
+        const els = {
+            topic: document.getElementById('topic-bar'),
+            title: document.getElementById('slide-title'),
+            text: document.getElementById('slide-text'),
+            image: document.getElementById('slide-image'),
+            imgName: document.getElementById('img-name'),
+            placeholder: document.getElementById('img-placeholder'),
+            note: document.getElementById('note-text'),
+            progress: document.getElementById('progress-bar')
+        };
+
+        // --- FUNCTIONS ---
+        function renderSlide(index) {
+            const slide = slides[index];
+
+            // Update Text Content
+            els.topic.textContent = slide.section;
+            els.title.innerHTML = slide.title; // innerHTML allows bold tags if needed
+            els.text.innerHTML = slide.content;
+            els.note.textContent = slide.rawContent; // Speaker reads the raw text
+
+            // Update Image
+            els.imgName.textContent = slide.image;
+            els.image.alt = `${slide.title} visual`;
+
+            const testImage = new Image();
+            testImage.onload = () => {
+                els.image.src = slide.image;
+                els.image.style.display = "block";
+                els.placeholder.style.display = "none";
+            };
+            testImage.onerror = () => {
+                els.image.removeAttribute("src");
+                els.image.style.display = "none";
+                els.placeholder.style.display = "flex";
+            };
+            testImage.src = slide.image;
+
+            // Update Progress Bar
+            const progress = ((index + 1) / slides.length) * 100;
+            els.progress.style.width = `${progress}%`;
+        }
+
+        function nextSlide() {
+            if (currentIndex < slides.length - 1) {
+                currentIndex++;
+                renderSlide(currentIndex);
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderSlide(currentIndex);
+            }
+        }
+
+        // --- EVENTS ---
+        
+        // Keyboard Support (Arrow Keys)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " " || e.key === "Enter") nextSlide();
+            if (e.key === "ArrowLeft") prevSlide();
+        });
+
+        // Initialize
+        renderSlide(currentIndex);
+
+    </script>
+</body>
 </html>
